@@ -1,0 +1,13 @@
+SELECT 
+    CASE 
+        WHEN oi.price > 200 THEN 'High Value (>200)'
+        WHEN oi.price BETWEEN 50 AND 200 THEN 'Mid Value (50-200)'
+        ELSE 'Low Value (<50)'
+    END AS order_segment,
+    ROUND(AVG(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp)), 2) AS avg_days_to_deliver,
+    COUNT(*) AS total_orders
+FROM olist_orders_dataset o
+JOIN olist_order_items_dataset oi ON o.order_id = oi.order_id
+WHERE o.order_delivered_customer_date IS NOT NULL
+GROUP BY order_segment
+ORDER BY avg_days_to_deliver;

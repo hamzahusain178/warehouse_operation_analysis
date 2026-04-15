@@ -1,0 +1,9 @@
+SELECT 
+    c.customer_state,
+    ROUND(AVG(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp)), 2) AS avg_days_to_deliver,
+    COUNT(*) AS total_orders
+FROM olist_orders_dataset o
+JOIN olist_customers_dataset c ON o.customer_id = c.customer_id
+WHERE o.order_delivered_customer_date IS NOT NULL
+GROUP BY c.customer_state
+ORDER BY avg_days_to_deliver DESC;
